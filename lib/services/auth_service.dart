@@ -1,4 +1,6 @@
+import '../config/app_config.dart';
 import '../core/api_client.dart';
+import '../core/mock_data.dart';
 import '../core/token_storage.dart';
 import '../models/app_user.dart';
 
@@ -16,6 +18,11 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    if (AppConfig.useMockData) {
+      await tokenStorage.saveToken('mock-token');
+      return MockData.user;
+    }
+
     final data = await apiClient.post(
       '/register',
       withAuth: false,
@@ -45,6 +52,11 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    if (AppConfig.useMockData) {
+      await tokenStorage.saveToken('mock-token');
+      return MockData.user;
+    }
+
     final data = await apiClient.post(
       '/login',
       withAuth: false,
@@ -69,15 +81,21 @@ class AuthService {
   }
 
   Future<AppUser> me() async {
+    if (AppConfig.useMockData) {
+      return MockData.user;
+    }
+
     final data = await apiClient.get('/me');
     return AppUser.fromJson(data['user']);
   }
 
   Future<void> logout() async {
-    try {
-      await apiClient.post('/logout');
-    } finally {
-      await tokenStorage.clearToken();
+    if (!AppConfig.useMockData) {
+      try {
+        await apiClient.post('/logout');
+      } catch (_) {}
     }
+
+    await tokenStorage.clearToken();
   }
 }

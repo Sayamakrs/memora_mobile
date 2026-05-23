@@ -1,4 +1,6 @@
+import '../config/app_config.dart';
 import '../core/api_client.dart';
+import '../core/mock_data.dart';
 import '../models/graph_node.dart';
 
 class GraphService {
@@ -9,6 +11,11 @@ class GraphService {
   });
 
   Future<GraphNode> getTree(String entryUuid) async {
+    if (AppConfig.useMockData) {
+      await Future.delayed(const Duration(milliseconds: 350));
+      return MockData.graphTree(entryUuid);
+    }
+
     final data = await apiClient.get('/graph/tree/$entryUuid');
 
     final tree = data['tree'];
