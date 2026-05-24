@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:memora_mobile/core/api_client.dart';
+import 'package:memora_mobile/core/token_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../config/app_config.dart';
+import '../services/auth_service.dart';
+import 'package:flutter/services.dart';
+
+import '../main.dart';
 
 const String _googleLogoSvg = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -30,30 +36,31 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
 
-    final rootUrl = AppConfig.baseUrl.replaceFirst('/api/mobile', '');
-    final uri = Uri.parse('$rootUrl/auth/google');
-
     try {
-      final launched = await launchUrl(
-        uri,
-        mode: LaunchMode.platformDefault,
-        webOnlyWindowName: '_self',
-      );
+      final authService = AppDependencies.of(context).authService;
 
-      if (!launched && mounted) {
+      final user = await authService.loginWithGoogle();
+
+      if (user != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to open Google sign in.'),
+          SnackBar(
+            content: Text('Welcome back, ${user.name}!'),
             behavior: SnackBarBehavior.floating,
           ),
         );
+
+        Navigator.of(context).pushReplacementNamed('/dashboard');
       }
-    } catch (_) {
+    } catch (error) {
       if (mounted) {
+        String errorMessage = error.toString();
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to open Google sign in.'),
+          SnackBar(
+            content: Text(errorMessage),
             behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.redAccent,
+            duration: Duration(seconds: 10), // Lebih lama agar sempat terbaca
           ),
         );
       }
@@ -100,7 +107,6 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 20),
-
                       Text(
                         'Your life,',
                         textAlign: TextAlign.center,
@@ -112,7 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                           color: const Color(0xFF0F172A),
                         ),
                       ),
-
                       ShaderMask(
                         shaderCallback: (bounds) {
                           return const LinearGradient(
@@ -134,9 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 32),
-
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 560),
                         child: Text(
@@ -150,9 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 72),
-
                       LandingGoogleButton(
                         isLoading: isLoading,
                         onTap: beginJourney,
