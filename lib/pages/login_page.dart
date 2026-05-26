@@ -47,10 +47,13 @@ class _LoginPageState extends State<LoginPage> {
             content: Text('Welcome back, ${user.name}!'),
             behavior: SnackBarBehavior.floating,
           ),
-        );
+      );
 
-        Navigator.of(context).pushReplacementNamed('/dashboard');
-      }
+        Navigator.of(context).pushReplacementNamed(
+          '/dashboard',
+          arguments: user,
+      );
+    }
     } catch (error) {
       if (mounted) {
         String errorMessage = error.toString();

@@ -24,19 +24,32 @@ class Entry {
   });
 
   factory Entry.fromJson(Map<String, dynamic> json) {
-    return Entry(
-      id: json['id'] ?? 0,
-      uuid: json['uuid'] ?? '',
-      title: json['title'] ?? 'Untitled Entry',
-      content: json['content'] ?? '',
-      excerpt: json['excerpt'] ?? '',
-      emotions: (json['emotions'] as List<dynamic>? ?? [])
-          .map((item) => item.toString())
-          .toList(),
-      isSyncedToGraph: json['is_synced_to_graph'] ?? false,
-      graphSyncedAt: json['graph_synced_at'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-    );
+  String stripHtml(String value) {
+    return value
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .trim();
   }
+
+  final rawContent = json['content']?.toString() ?? '';
+  final rawExcerpt = json['excerpt']?.toString() ?? '';
+
+  return Entry(
+    id: json['id'] ?? 0,
+    uuid: json['uuid'] ?? '',
+    title: json['title'] ?? 'Untitled Entry',
+    content: stripHtml(rawContent),
+    excerpt: stripHtml(rawExcerpt.isNotEmpty ? rawExcerpt : rawContent),
+    emotions: (json['emotions'] as List<dynamic>? ?? [])
+        .map((item) => item.toString())
+        .toList(),
+    isSyncedToGraph: json['is_synced_to_graph'] ?? false,
+    graphSyncedAt: json['graph_synced_at'],
+    createdAt: json['created_at'],
+    updatedAt: json['updated_at'],
+  );
+}
 }
