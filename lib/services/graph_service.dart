@@ -11,14 +11,12 @@ class GraphService {
   Future<GraphNode> getTree(String entryUuid) async {
     final data = await apiClient.get('/graph/tree/$entryUuid');
 
-    final tree = data['tree'];
-
-    if (tree is Map<String, dynamic>) {
-      return GraphNode.fromJson(tree);
+    if (data is Map<String, dynamic>) {
+      return GraphNode.fromJson(data);
     }
 
-    if (tree is Map && tree.isNotEmpty) {
-      return GraphNode.fromJson(Map<String, dynamic>.from(tree));
+    if (data is Map && data.isNotEmpty) {
+      return GraphNode.fromJson(Map<String, dynamic>.from(data));
     }
 
     return GraphNode(

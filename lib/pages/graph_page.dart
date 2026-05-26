@@ -23,28 +23,47 @@ class _GraphPageState extends State<GraphPage> {
   bool isLoading = true;
 
   @override
-  void initState() {
-    super.initState();
-    loadGraph();
-  }
+void initState() {
+  super.initState();
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (mounted) {
+      loadGraph();
+    }
+  });
+}
 
   Future<void> loadGraph() async {
-    setState(() => isLoading = true);
+  setState(() => isLoading = true);
 
-    try {
-      root = await AppDependencies.of(context)
-          .graphService
-          .getTree(widget.entryUuid);
-    } on ApiException catch (error) {
+  try {
+    final result = await AppDependencies.of(context)
+        .graphService
+        .getTree(widget.entryUuid);
+
+    if (!mounted) return;
+
+    setState(() {
+      root = result;
+    });
+  } on ApiException catch (error) {
+    root = null;
+
+    if (mounted) {
       showMessage(error.message);
-    } catch (_) {
-      showMessage('Gagal mengambil graph tree.');
-    } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
+    }
+  } catch (error) {
+    root = null;
+
+    if (mounted) {
+      showMessage('Gagal mengambil graph tree: $error');
+    }
+  } finally {
+    if (mounted) {
+      setState(() => isLoading = false);
     }
   }
+}
 
   void showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
