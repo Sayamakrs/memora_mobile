@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../core/api_client.dart';
 import '../main.dart';
 import '../models/app_user.dart';
@@ -52,16 +51,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> logout() async {
-    await AppDependencies.of(context).authService.logout();
+  await AppDependencies.of(context).authService.logout();
 
-    if (!mounted) return;
+  if (!mounted) return;
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginPage()),
-      (_) => false,
-    );
-  }
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (_) => const LoginPage()),
+    (_) => false,
+  );
+}
 
   void showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -81,17 +80,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> openEntry(Entry entry) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EntryDetailPage(entryUuid: entry.uuid),
-      ),
-    );
+  debugPrint('OPEN ENTRY ID: ${entry.id}');
+  debugPrint('OPEN ENTRY UUID: ${entry.uuid}');
+  debugPrint('OPEN ENTRY TITLE: ${entry.title}');
 
-    if (result == true) {
-      loadEntries();
-    }
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => EntryDetailPage(entryUuid: entry.uuid),
+    ),
+  );
+
+  if (result == true) {
+    loadEntries();
   }
+}
 
   @override
   Widget build(BuildContext context) {
