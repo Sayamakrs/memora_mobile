@@ -1,18 +1,24 @@
 import '../core/api_client.dart';
 import '../core/token_storage.dart';
 import '../models/app_user.dart';
-
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final ApiClient apiClient;
   final TokenStorage tokenStorage;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    serverClientId:
-        '839466021455-kg72smu2uc0qfdsvfdsjughssu55lm6n.apps.googleusercontent.com',
-    scopes: ['email', 'profile'],
-  );
+  final GoogleSignIn _googleSignIn = kIsWeb
+    ? GoogleSignIn(
+        clientId:
+            '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
+        scopes: ['email', 'profile', 'openid'],
+      )
+    : GoogleSignIn(
+        scopes: ['email', 'profile'],
+        serverClientId:
+            '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
+      );
 
   Future<AppUser?> loginWithGoogle() async {
     try {
@@ -136,10 +142,16 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    try {
-      await apiClient.post('/logout');
-    } finally {
-      await tokenStorage.clearToken();
-    }
+  try {
+    await apiClient.post('/logout');
+  } catch (_) {
   }
+
+  await tokenStorage.clearToken();
+
+  try {
+    await _googleSignIn.signOut();
+  } catch (_) {
+  }
+}
 }

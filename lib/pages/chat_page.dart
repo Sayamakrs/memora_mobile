@@ -25,39 +25,41 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> sendMessage() async {
-    final message = messageController.text.trim();
+  if (isSending) return;
 
-    if (message.isEmpty) return;
+  final message = messageController.text.trim();
 
-    setState(() => isSending = true);
+  if (message.isEmpty) return;
 
-    try {
-      if (activeChat == null) {
-        activeChat = await AppDependencies.of(context)
-            .chatService
-            .createChat(message);
-      } else {
-        activeChat = await AppDependencies.of(context).chatService.sendMessage(
-              chatUuid: activeChat!.uuid,
-              message: message,
-            );
-      }
+  setState(() => isSending = true);
 
-      messageController.clear();
+  try {
+    if (activeChat == null) {
+      activeChat = await AppDependencies.of(context)
+          .chatService
+          .createChat(message);
+    } else {
+      activeChat = await AppDependencies.of(context).chatService.sendMessage(
+            chatUuid: activeChat!.uuid,
+            message: message,
+          );
+    }
 
-      if (mounted) {
-        setState(() {});
-      }
-    } on ApiException catch (error) {
-      showMessage(error.message);
-    } catch (_) {
-      showMessage('Gagal mengirim pesan. Pastikan backend berjalan.');
-    } finally {
-      if (mounted) {
-        setState(() => isSending = false);
-      }
+    messageController.clear();
+
+    if (mounted) {
+      setState(() {});
+    }
+  } on ApiException catch (error) {
+    showMessage(error.message);
+  } catch (_) {
+    showMessage('Gagal mengirim pesan. Pastikan backend berjalan.');
+  } finally {
+    if (mounted) {
+      setState(() => isSending = false);
     }
   }
+}
 
   void showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(

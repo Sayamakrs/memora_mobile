@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'core/api_client.dart';
 import 'core/token_storage.dart';
+import 'models/app_user.dart';
+import 'pages/home_page.dart';
 import 'pages/splash_page.dart';
 import 'services/auth_service.dart';
 import 'services/chat_service.dart';
@@ -71,6 +73,23 @@ class MemoraApp extends StatelessWidget {
         ),
       ),
       home: const SplashPage(),
+      onGenerateRoute: (settings) {
+        if (settings.name == '/dashboard') {
+          final args = settings.arguments;
+
+          if (args is! AppUser) {
+            return MaterialPageRoute(
+              builder: (_) => const SplashPage(),
+            );
+          }
+
+          return MaterialPageRoute(
+            builder: (_) => HomePage(user: args),
+          );
+        }
+
+        return null;
+      },
     );
   }
 }
