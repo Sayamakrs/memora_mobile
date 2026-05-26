@@ -26,28 +26,39 @@ class _EntryDetailPageState extends State<EntryDetailPage> {
   bool isSyncing = false;
 
   @override
-  void initState() {
-    super.initState();
-    loadEntry();
-  }
+void initState() {
+  super.initState();
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (mounted) {
+      loadEntry();
+    }
+  });
+}
 
   Future<void> loadEntry() async {
-    setState(() => isLoading = true);
+  setState(() => isLoading = true);
 
-    try {
-      entry = await AppDependencies.of(context)
-          .entryService
-          .getEntry(widget.entryUuid);
-    } on ApiException catch (error) {
+  try {
+    entry = await AppDependencies.of(context)
+        .entryService
+        .getEntry(widget.entryUuid);
+  } on ApiException catch (error) {
+    entry = null;
+    if (mounted) {
       showMessage(error.message);
-    } catch (_) {
+    }
+  } catch (_) {
+    entry = null;
+    if (mounted) {
       showMessage('Gagal mengambil detail journal.');
-    } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
+    }
+  } finally {
+    if (mounted) {
+      setState(() => isLoading = false);
     }
   }
+}
 
   Future<void> deleteEntry() async {
     final confirmed = await showDialog<bool>(
