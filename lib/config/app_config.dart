@@ -13,6 +13,6 @@ class AppConfig {
        contoh: http://192.168.1.10:8000/api/mobile
   */
 
-static const String baseUrl = 'http://IP_LAPTOP_KAMU:8000/api/mobile';
+  static const String baseUrl = 'http://127.0.0.1:8000/api/mobile';
   //static const String baseUrl = 'http://192.168.100.32:8000/api/mobile';
 }
