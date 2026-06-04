@@ -16,6 +16,9 @@ dependencies:
   url_launcher: ^6.3.0
   flutter_svg: ^2.0.10+1
   google_sign_in: ^6.2.1
+  flutter_lucide: ^1.11.0
+  lucide_icons: ^0.257.0
+  get_it: ^8.0.0
 
 dev_dependencies:
   flutter_test:

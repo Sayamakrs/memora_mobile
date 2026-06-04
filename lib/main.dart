@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memora_mobile/services/user_service.dart';
 
 import 'core/api_client.dart';
 import 'core/token_storage.dart';
@@ -9,6 +10,7 @@ import 'services/auth_service.dart';
 import 'services/chat_service.dart';
 import 'services/entry_service.dart';
 import 'services/graph_service.dart';
+import 'services/user_service.dart';
 
 void main() {
   final tokenStorage = TokenStorage();
@@ -24,6 +26,7 @@ void main() {
       entryService: EntryService(apiClient: apiClient),
       chatService: ChatService(apiClient: apiClient),
       graphService: GraphService(apiClient: apiClient),
+      userService: UserService(apiClient: apiClient),
       child: const MemoraApp(),
     ),
   );
@@ -35,6 +38,7 @@ class AppDependencies extends InheritedWidget {
   final EntryService entryService;
   final ChatService chatService;
   final GraphService graphService;
+  final UserService userService;
 
   const AppDependencies({
     super.key,
@@ -43,6 +47,7 @@ class AppDependencies extends InheritedWidget {
     required this.entryService,
     required this.chatService,
     required this.graphService,
+    required this.userService,
     required super.child,
   });
 

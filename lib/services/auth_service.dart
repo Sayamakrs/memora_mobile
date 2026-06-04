@@ -9,16 +9,16 @@ class AuthService {
   final TokenStorage tokenStorage;
 
   final GoogleSignIn _googleSignIn = kIsWeb
-    ? GoogleSignIn(
-        clientId:
-            '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
-        scopes: ['email', 'profile', 'openid'],
-      )
-    : GoogleSignIn(
-        scopes: ['email', 'profile'],
-        serverClientId:
-            '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
-      );
+      ? GoogleSignIn(
+          clientId:
+              '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
+          scopes: ['email', 'profile', 'openid'],
+        )
+      : GoogleSignIn(
+          scopes: ['email', 'profile'],
+          serverClientId:
+              '839466021455-kg72smu2uc0qfdsvfdsjughssu55lm6n.apps.googleusercontent.com',
+        );
 
   Future<AppUser?> loginWithGoogle() async {
     try {
@@ -142,16 +142,14 @@ class AuthService {
   }
 
   Future<void> logout() async {
-  try {
-    await apiClient.post('/logout');
-  } catch (_) {
-  }
+    try {
+      await apiClient.post('/logout');
+    } catch (_) {}
 
-  await tokenStorage.clearToken();
+    await tokenStorage.clearToken();
 
-  try {
-    await _googleSignIn.signOut();
-  } catch (_) {
+    try {
+      await _googleSignIn.signOut();
+    } catch (_) {}
   }
-}
 }
