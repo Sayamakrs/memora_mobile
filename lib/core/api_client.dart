@@ -7,10 +7,12 @@ import 'token_storage.dart';
 class ApiException implements Exception {
   final int statusCode;
   final String message;
+  final String? body;
 
   ApiException({
     required this.statusCode,
     required this.message,
+    this.body,
   });
 
   @override
@@ -120,11 +122,17 @@ class ApiClient {
       } else if (decoded['errors'] != null) {
         message = decoded['errors'].toString();
       }
+
+      // Sertakan detail dari Kaori bila ada (mis. endpoint graph tree).
+      if (decoded['kaori_error'] != null) {
+        message = '$message (${decoded['kaori_error']})';
+      }
     }
 
     throw ApiException(
       statusCode: statusCode,
       message: message,
+      body: body,
     );
   }
 }

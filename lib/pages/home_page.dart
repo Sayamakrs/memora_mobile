@@ -9,6 +9,7 @@ import '../widgets/soft_card.dart';
 import 'chat_page.dart';
 import 'entry_detail_page.dart';
 import 'entry_editor_page.dart';
+import 'journey_page.dart';
 import 'login_page.dart';
 import 'profile_page.dart';
 
@@ -169,6 +170,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 12),
+            SoftCard(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const JourneyPage()),
+                );
+              },
+              child: const _HomeAction(
+                icon: Icons.calendar_month_rounded,
+                title: 'My Journey',
+                subtitle: 'All entries on a calendar',
+              ),
             ),
             const SizedBox(height: 28),
             const Text(

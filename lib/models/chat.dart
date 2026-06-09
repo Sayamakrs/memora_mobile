@@ -26,12 +26,16 @@ class Chat {
   final String uuid;
   final String title;
   final List<ChatMessage> messages;
+  final String? createdAt;
+  final String? updatedAt;
 
   Chat({
     required this.id,
     required this.uuid,
     required this.title,
     required this.messages,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Chat.fromJson(Map<String, dynamic> json) {
@@ -42,6 +46,8 @@ class Chat {
       messages: (json['messages'] as List<dynamic>? ?? [])
           .map((item) => ChatMessage.fromJson(item))
           .toList(),
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 }

@@ -11,13 +11,13 @@ class AuthService {
   final GoogleSignIn _googleSignIn = kIsWeb
     ? GoogleSignIn(
         clientId:
-            '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
+            '784721835961-s2k3npuj7luqukoic3nnp0i3bg5q2aal.apps.googleusercontent.com',
         scopes: ['email', 'profile', 'openid'],
       )
     : GoogleSignIn(
         scopes: ['email', 'profile'],
         serverClientId:
-            '362328034310-cqqknlqmuodahf9iiinlr6sf5kekeida.apps.googleusercontent.com',
+            '784721835961-s2k3npuj7luqukoic3nnp0i3bg5q2aal.apps.googleusercontent.com',
       );
 
   Future<AppUser?> loginWithGoogle() async {
