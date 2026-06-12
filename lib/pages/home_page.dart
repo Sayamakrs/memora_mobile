@@ -12,6 +12,7 @@ import 'entry_editor_page.dart';
 import 'journey_page.dart';
 import 'login_page.dart';
 import 'profile_page.dart';
+import 'monthly_view_page.dart';
 
 class HomePage extends StatefulWidget {
   final AppUser user;
@@ -52,16 +53,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> logout() async {
-  await AppDependencies.of(context).authService.logout();
+    await AppDependencies.of(context).authService.logout();
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(builder: (_) => const LoginPage()),
-    (_) => false,
-  );
-}
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (_) => false,
+    );
+  }
 
   void showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -81,21 +82,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> openEntry(Entry entry) async {
-  debugPrint('OPEN ENTRY ID: ${entry.id}');
-  debugPrint('OPEN ENTRY UUID: ${entry.uuid}');
-  debugPrint('OPEN ENTRY TITLE: ${entry.title}');
+    debugPrint('OPEN ENTRY ID: ${entry.id}');
+    debugPrint('OPEN ENTRY UUID: ${entry.uuid}');
+    debugPrint('OPEN ENTRY TITLE: ${entry.title}');
 
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => EntryDetailPage(entryUuid: entry.uuid),
-    ),
-  );
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EntryDetailPage(entryUuid: entry.uuid),
+      ),
+    );
 
-  if (result == true) {
-    loadEntries();
+    if (result == true) {
+      loadEntries();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -186,12 +187,40 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 28),
-            const Text(
-              'Recent Reflections',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Recent Reflections',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final now = DateTime.now();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MonthlyViewPage(
+                          initialYear: now.year,
+                          initialMonth: now.month,
+                        ),
+                      ),
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color(0xFF6366F1), // Warna Indigo
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  child: const Text('See All'),
+                ),
+              ],
             ),
             const SizedBox(height: 14),
             if (isLoading)
