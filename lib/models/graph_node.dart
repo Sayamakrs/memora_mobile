@@ -11,6 +11,10 @@ class GraphNode {
     required this.children,
   });
 
+  static final RegExp _uuidPattern = RegExp(
+    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+  );
+
   factory GraphNode.fromJson(Map<String, dynamic> json) {
     final children = <GraphNode>[];
 
@@ -28,10 +32,21 @@ class GraphNode {
       }
     }
 
-    addChildrenFrom('children');
-    addChildrenFrom('events');
-    addChildrenFrom('people');
-    addChildrenFrom('emotions');
+    // Beragam kemungkinan nama key anak dari Kaori.
+    for (final key in [
+      'children',
+      'events',
+      'people',
+      'emotions',
+      'nodes',
+      'links',
+      'relationships',
+      'relations',
+      'related',
+      'items',
+    ]) {
+      addChildrenFrom(key);
+    }
 
     final emotionType = json['emotion_type'];
     if (emotionType is Map<String, dynamic>) {
@@ -40,12 +55,26 @@ class GraphNode {
       children.add(GraphNode.fromJson(Map<String, dynamic>.from(emotionType)));
     }
 
+    final type = json['type']?.toString() ??
+        json['label_type']?.toString() ??
+        'Node';
+
+    var label = json['label']?.toString() ??
+        json['name']?.toString() ??
+        json['summary']?.toString() ??
+        json['title']?.toString() ??
+        json['text']?.toString() ??
+        json['value']?.toString() ??
+        'Untitled Node';
+
+    // Root Entry biasanya ber-label UUID mentah -> tampilkan lebih ramah.
+    if (type.toLowerCase() == 'entry' && _uuidPattern.hasMatch(label)) {
+      label = 'Journal Entry';
+    }
+
     return GraphNode(
-      type: json['type']?.toString() ?? 'Node',
-      label: json['label']?.toString() ??
-          json['name']?.toString() ??
-          json['summary']?.toString() ??
-          'Untitled Node',
+      type: type,
+      label: label,
       uuid: json['uuid']?.toString() ?? json['uid']?.toString(),
       children: children,
     );

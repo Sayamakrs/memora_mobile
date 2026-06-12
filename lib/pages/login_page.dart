@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Text(errorMessage),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 10), // Lebih lama agar sempat terbaca
+            duration: const Duration(seconds: 10), // Lebih lama agar sempat terbaca
           ),
         );
       }
@@ -316,8 +316,8 @@ class _MeshBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: const [
+    return const Stack(
+      children: [
         Positioned.fill(
           child: DecoratedBox(
             decoration: BoxDecoration(
