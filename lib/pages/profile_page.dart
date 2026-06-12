@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final initial = user.name.isNotEmpty ? user.name[0].toUpperCase() : 'M';
+    // final initial = user.name.isNotEmpty ? user.name[0].toUpperCase() : 'M';
 
     return MemoraShell(
       title: 'Edit Profile',

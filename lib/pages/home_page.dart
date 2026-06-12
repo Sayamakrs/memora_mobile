@@ -198,28 +198,28 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    final now = DateTime.now();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => MonthlyViewPage(
-                          initialYear: now.year,
-                          initialMonth: now.month,
-                        ),
-                      ),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFF6366F1), // Warna Indigo
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  child: const Text('See All'),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     final now = DateTime.now();
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (_) => MonthlyViewPage(
+                //           initialYear: now.year,
+                //           initialMonth: now.month,
+                //         ),
+                //       ),
+                //     );
+                //   },
+                //   style: TextButton.styleFrom(
+                //     foregroundColor: const Color(0xFF6366F1), // Warna Indigo
+                //     textStyle: const TextStyle(
+                //       fontWeight: FontWeight.w800,
+                //       letterSpacing: 0.5,
+                //     ),
+                //   ),
+                //   child: const Text('See All'),
+                // ),
               ],
             ),
             const SizedBox(height: 14),
